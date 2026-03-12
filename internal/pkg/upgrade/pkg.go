@@ -9,6 +9,8 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/siderolabs/gen/xslices"
+
 	"github.com/siderolabs/bldr/internal/pkg/types/v1alpha1"
 	"github.com/siderolabs/bldr/internal/pkg/types/v1alpha2"
 )
@@ -40,7 +42,7 @@ func convertDeps(stageNames []string, old []*v1alpha1.Dependency) v1alpha2.Depen
 }
 
 func convertSteps(old []*v1alpha1.Step) []v1alpha2.Step {
-	newSteps := []v1alpha2.Step{}
+	newSteps := make([]v1alpha2.Step, 0, len(old))
 
 	for _, step := range old {
 		newStep := v1alpha2.Step{}
@@ -72,12 +74,9 @@ func convertSteps(old []*v1alpha1.Step) []v1alpha2.Step {
 }
 
 func convertFinalize(old []*v1alpha1.Finalize) []v1alpha2.Finalize {
-	newFinalize := []v1alpha2.Finalize{}
-	for _, f := range old {
-		newFinalize = append(newFinalize, v1alpha2.Finalize(*f))
-	}
-
-	return newFinalize
+	return xslices.Map(old, func(f *v1alpha1.Finalize) v1alpha2.Finalize {
+		return v1alpha2.Finalize(*f)
+	})
 }
 
 // FromV1Alpha1 upgrades v1alpha1 format -> v1alpha2.
