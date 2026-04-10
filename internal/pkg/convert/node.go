@@ -7,7 +7,6 @@ package convert
 import (
 	"context"
 	"fmt"
-	"path"
 	"path/filepath"
 	"sort"
 
@@ -319,10 +318,11 @@ func (node *NodeLLB) stepScripts(root llb.State, i int, step v1alpha2.Step) llb.
 				return llb.AddMount(
 					p,
 					llb.Scratch(),
-					llb.AsPersistentCacheDir(
-						path.Clean(node.Graph.Options.CacheIDNamespace+"/"+p),
-						llb.CacheMountShared,
-					),
+					llb.Tmpfs(),
+					// llb.AsPersistentCacheDir(
+					// 	path.Clean(node.Graph.Options.CacheIDNamespace+"/"+p),
+					// 	llb.CacheMountShared,
+					// ),
 				)
 			})...)
 
